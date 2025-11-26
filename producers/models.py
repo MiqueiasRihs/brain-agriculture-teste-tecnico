@@ -8,9 +8,9 @@ class Producer(BaseModel):
         ("CNPJ", "CNPJ"),
     ]
     
-    name = models.CharField(max_length=255)
-    document_type = models.CharField(max_length=4, choices=DOCUMENT_TYPES)
-    document = models.CharField(max_length=18, unique=True, validators=[])
+    name = models.CharField("Nome", max_length=255)
+    document_type = models.CharField("Tipo de Documento", max_length=4, choices=DOCUMENT_TYPES)
+    document = models.CharField("Documento", max_length=18, unique=True, validators=[])
 
     class Meta:
         db_table = "producers"

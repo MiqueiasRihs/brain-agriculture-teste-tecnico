@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'core',
-    'producers',
     'farm',
+    'producers',
+    'cultivation',
 ]
 
 MIDDLEWARE = [
