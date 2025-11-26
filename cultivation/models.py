@@ -6,6 +6,7 @@ from farm.models import Farm
 
 class Crop(BaseModel):
     name = models.CharField("Nome", max_length=100, unique=True)
+    code = models.CharField("Código", max_length=50, unique=True, null=True, blank=True)
 
     class Meta:
         db_table = "crop"
