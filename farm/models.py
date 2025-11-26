@@ -1,8 +1,9 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
+from core.choices import States
 from core.models import BaseModel
 from producers.models import Producer
-from core.choices import States
 
 
 class Farm(BaseModel):
@@ -21,3 +22,14 @@ class Farm(BaseModel):
 
     def __str__(self):
         return f"{self.name} ({self.state})"
+    
+    def clean(self):
+        if self.arable_area_ha < 0 or self.vegetation_area_ha < 0 or self.total_area_ha < 0:
+            raise ValidationError("As áreas não podem ser negativas.")
+
+        if self.arable_area_ha + self.vegetation_area_ha > self.total_area_ha:
+            raise ValidationError("A soma da área agricultável e vegetação não pode exceder a área total.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        return super().save(*args, **kwargs)
