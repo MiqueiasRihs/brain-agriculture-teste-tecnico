@@ -2,8 +2,9 @@ from producers.serializers import ProducerSerializer
 
 import pytest
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 def test_serializer_valid_cpf():
     data = {
         "name": "João da Silva",
@@ -15,7 +16,6 @@ def test_serializer_valid_cpf():
     assert serializer.is_valid() is True
 
 
-@pytest.mark.django_db
 def test_serializer_invalid_cpf():
     data = {
         "name": "João da Silva",
@@ -28,7 +28,6 @@ def test_serializer_invalid_cpf():
     assert "document" in serializer.errors
     
     
-@pytest.mark.django_db
 def test_serializer_valid_cnpj():
     data = {
         "name": "João da Silva",
@@ -40,7 +39,6 @@ def test_serializer_valid_cnpj():
     assert serializer.is_valid() is True
 
 
-@pytest.mark.django_db
 def test_serializer_invalid_cnpj():
     data = {
         "name": "João da Silva",
@@ -53,7 +51,6 @@ def test_serializer_invalid_cnpj():
     assert "document" in serializer.errors
     
 
-@pytest.mark.django_db
 def test_serializer_normalizes_document():
     data = {
         "name": "João Silva",
@@ -66,7 +63,6 @@ def test_serializer_normalizes_document():
     assert serializer.validated_data["document"] == "12345678909"
     
 
-@pytest.mark.django_db
 def test_serializer_without_document():
     data = {
         "name": "João Silva",

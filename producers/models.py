@@ -18,6 +18,8 @@ class Producer(BaseModel):
         db_table = "producers"
         verbose_name = "Produtor"
         verbose_name_plural = "Produtores"
+        ordering = ["-created_at"]
+        
 
     def __str__(self):
         return self.name

@@ -5,7 +5,9 @@ from producers.models import Producer
 import pytest
 
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
+
 def test_producer_valid_cpf_creation():
     producer = Producer.objects.create(
         name="Produtor teste",
@@ -16,7 +18,6 @@ def test_producer_valid_cpf_creation():
     assert Producer.objects.count() == 1
 
 
-@pytest.mark.django_db
 def test_producer_invalid_cpf_creation():
     producer = Producer(
         name="Produtor Teste",
@@ -28,7 +29,6 @@ def test_producer_invalid_cpf_creation():
         producer.full_clean()
 
 
-@pytest.mark.django_db
 def test_producer_valid_cnpj_creation():
     producer = Producer.objects.create(
         name="Produtor teste",
@@ -39,7 +39,6 @@ def test_producer_valid_cnpj_creation():
     assert Producer.objects.count() == 1
     
 
-@pytest.mark.django_db
 def test_producer_invalid_cnpj_creation():
     producer = Producer(
         name="Produtor Teste",
@@ -51,7 +50,6 @@ def test_producer_invalid_cnpj_creation():
         producer.full_clean()
         
 
-@pytest.mark.django_db
 def test_producer_no_document_mask_creation():
     producer = Producer.objects.create(
         name="Produtor Teste",
