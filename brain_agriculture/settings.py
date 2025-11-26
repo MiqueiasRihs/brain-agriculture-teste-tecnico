@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
+    'rest_framework',
+    'drf_spectacular',
+
     'core',
     'farm',
     'producers',
@@ -59,6 +62,13 @@ ROOT_URLCONF = 'brain_agriculture.urls'
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "core.pagination.DefaultPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Brain Agriculture API",
+    "DESCRIPTION": "Documentação pública da API Brain Agriculture.",
+    "VERSION": "1.0.0",
 }
 
 TEMPLATES = [
