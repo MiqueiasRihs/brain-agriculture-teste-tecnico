@@ -56,6 +56,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'brain_agriculture.urls'
 
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "core.pagination.DefaultPagination",
+    "PAGE_SIZE": 10,
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

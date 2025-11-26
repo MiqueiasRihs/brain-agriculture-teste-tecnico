@@ -1,3 +1,8 @@
-from django.urls import path
+from rest_framework.routers import SimpleRouter
 
-urlpatterns = []
+from producers.views import ProducerViewSet
+
+router = SimpleRouter()
+router.register(r'producers', ProducerViewSet)
+
+urlpatterns = router.urls
