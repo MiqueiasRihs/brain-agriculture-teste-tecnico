@@ -32,6 +32,9 @@ class Producer(BaseModel):
 
     def save(self, *args, **kwargs):
         self.clean()
+        
+        # Salvando apenas números do documento
+        self.document = ''.join(filter(str.isdigit, self.document))
         return super().save(*args, **kwargs)
     
     
