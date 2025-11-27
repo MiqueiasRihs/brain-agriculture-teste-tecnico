@@ -14,8 +14,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    # volumes:
-    #   - ./database_dump.sql:/docker-entrypoint-initdb.d/database_dump.sql
     networks:
       - network
 
