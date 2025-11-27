@@ -1,21 +1,16 @@
-from decimal import Decimal
+from django.urls import reverse
+
+from rest_framework import status
+
+from farm.models import Farm
+from core.choices import States
+from producers.factories import ProducerFactory
 
 import pytest
-from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APIClient
-
-from core.choices import States
-from farm.models import Farm
-from producers.models import Producer
+from decimal import Decimal
 
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture
-def api_client():
-    return APIClient()
 
 
 @pytest.fixture
@@ -46,7 +41,7 @@ def create_farm(producer, **overrides):
 
 
 def test_list_farms_returns_paginated_response(api_client, farm_list_url, producer):
-    second_producer = Producer.objects.create(
+    second_producer = ProducerFactory(
         name="Produtor Secundário",
         document_type="CNPJ",
         document="93997567000165",

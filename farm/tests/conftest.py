@@ -1,12 +1,12 @@
 import pytest
 
-from producers.models import Producer
+from producers.factories import ProducerFactory
 
 
 @pytest.fixture
-def producer():
-    return Producer.objects.create(
+def producer(user_factory):
+    return ProducerFactory(
         name="Produtor Padrão",
-        document_type="CPF",
         document="60435059084",
+        user=user_factory(),
     )

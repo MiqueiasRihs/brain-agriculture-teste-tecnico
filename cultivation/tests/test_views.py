@@ -2,6 +2,8 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
+from farm.factories import FarmFactory
+from producers.factories import ProducerFactory
 from cultivation.models import Crop, HarvestSeason, FarmCrop
 
 
@@ -104,3 +106,27 @@ def test_prevent_duplicate_farm_crop(api_client, farm_crop, farm, harvest_season
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert "non_field_errors" in response.data
+
+
+def test_farm_crops_filtered_by_owner(producer_client, harvest_season, crop, other_crop):
+    client, owner_user = producer_client
+    owner_producer = ProducerFactory(user=owner_user)
+    other_producer = ProducerFactory()
+
+    owner_farm = FarmFactory(producer=owner_producer)
+    other_farm = FarmFactory(producer=other_producer)
+
+    FarmCrop.objects.create(farm=owner_farm, harvest_season=harvest_season, crop=crop)
+    FarmCrop.objects.create(farm=owner_farm, harvest_season=harvest_season, crop=other_crop)
+    FarmCrop.objects.create(farm=other_farm, harvest_season=harvest_season, crop=crop)
+
+    response = client.get(reverse("farmcrop-list"))
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["count"] == 2
+
+    returned_farms = {str(item["farm"]) for item in response.data["results"]}
+    assert returned_farms == {str(owner_farm.id)}
+
+    returned_crops = {str(item["crop"]) for item in response.data["results"]}
+    assert returned_crops == {str(crop.id), str(other_crop.id)}

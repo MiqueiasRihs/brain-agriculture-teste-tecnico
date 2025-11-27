@@ -1,25 +1,18 @@
-from rest_framework.test import APIClient
-
 from farm.models import Farm
 from core.choices import States
-from producers.models import Producer
 from cultivation.models import Crop, HarvestSeason, FarmCrop
+from producers.factories import ProducerFactory
 
 import pytest
 from decimal import Decimal
 
 
 @pytest.fixture
-def api_client():
-    return APIClient()
-
-
-@pytest.fixture
-def producer():
-    return Producer.objects.create(
+def producer(user_factory):
+    return ProducerFactory(
         name="Produtor Teste",
-        document_type="CPF",
         document="28753163036",
+        user=user_factory(),
     )
 
 
