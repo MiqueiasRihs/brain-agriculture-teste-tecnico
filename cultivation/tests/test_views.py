@@ -77,7 +77,7 @@ def test_list_farm_crops_can_be_filtered(api_client, farm, harvest_season, crop,
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data["count"] == 1
-    assert str(response.data["results"][0]["crop"]) == str(other_crop.id)
+    assert str(response.data["results"][0]["crop"]['id']) == str(other_crop.id)
 
 
 def test_create_farm_crop(api_client, farm, harvest_season, crop):
@@ -125,8 +125,7 @@ def test_farm_crops_filtered_by_owner(producer_client, harvest_season, crop, oth
     assert response.status_code == status.HTTP_200_OK
     assert response.data["count"] == 2
 
-    returned_farms = {str(item["farm"]) for item in response.data["results"]}
+    returned_farms = {str(item["farm"]['id']) for item in response.data["results"]}
     assert returned_farms == {str(owner_farm.id)}
-
-    returned_crops = {str(item["crop"]) for item in response.data["results"]}
+    returned_crops = {str(item["crop"]['id']) for item in response.data["results"]}
     assert returned_crops == {str(crop.id), str(other_crop.id)}

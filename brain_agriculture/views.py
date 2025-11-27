@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,6 +9,9 @@ from django.views.generic import TemplateView
 from core.choices import States
 from cultivation.models import FarmCrop
 from farm.models import Farm
+
+
+logger = logging.getLogger("brain_agriculture.dashboard")
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -52,5 +56,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             "labels": ["Área agricultável", "Vegetação"],
             "data": [float(totals["arable_area"]), float(totals["vegetation_area"])],
         }
+
+        logger.info(
+            "Dashboard accessed by user=%s total_farms=%s total_area=%s",
+            getattr(user, "pk", None),
+            context["total_farms"],
+            context["total_area_ha"],
+        )
 
         return context

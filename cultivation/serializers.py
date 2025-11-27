@@ -1,3 +1,4 @@
+from farm.serializers import FarmSerializer
 from rest_framework import serializers
 
 from cultivation.models import Crop, HarvestSeason, FarmCrop
@@ -31,6 +32,13 @@ class FarmCropSerializer(serializers.ModelSerializer):
         model = FarmCrop
         fields = "__all__"
         read_only_fields = ["id", "created_at", "updated_at"]
+        
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["farm"] = FarmSerializer(instance.farm).data
+        rep["harvest_season"] = HarvestSeasonSerializer(instance.harvest_season).data
+        rep["crop"] = CropSerializer(instance.crop).data
+        return rep
         
     def validate(self, attrs):
         farm = attrs.get("farm") or getattr(self.instance, "farm", None)

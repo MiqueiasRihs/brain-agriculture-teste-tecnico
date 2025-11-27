@@ -1,3 +1,4 @@
+from producers.serializers import ProducerSerializer
 from rest_framework import serializers
 
 from farm.models import Farm
@@ -8,6 +9,11 @@ class FarmSerializer(serializers.ModelSerializer):
         model = Farm
         fields = '__all__'
         read_only_fields = ['id', 'created_at', 'updated_at']
+        
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['producer'] = ProducerSerializer(instance.producer).data
+        return rep
         
         
     def validate(self, attrs):
