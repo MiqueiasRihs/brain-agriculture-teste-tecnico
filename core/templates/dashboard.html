@@ -24,6 +24,14 @@
 
         header {
             margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        header .headline {
+            flex: 1;
         }
 
         h1 {
@@ -34,6 +42,22 @@
         p.subtitle {
             margin: 0;
             color: #6b7280;
+        }
+
+        .logout-link {
+            text-decoration: none;
+            color: #fff;
+            background: #ef4444;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(239, 68, 68, 0.3);
         }
 
         .cards {
@@ -90,8 +114,11 @@
 <body>
     <div class="container">
         <header>
-            <h1>Dashboard Agrícola</h1>
-            <p class="subtitle">Visão consolidada das fazendas cadastradas</p>
+            <div class="headline">
+                <h1>Dashboard Agrícola</h1>
+                <p class="subtitle">Visão consolidada das fazendas cadastradas</p>
+            </div>
+            <a class="logout-link" href="{% url 'logout' %}">Sair</a>
         </header>
 
         <section class="cards">

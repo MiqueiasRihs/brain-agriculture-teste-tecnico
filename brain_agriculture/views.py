@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Sum, Value
 from django.db.models.functions import Coalesce
 from django.views.generic import TemplateView
@@ -9,12 +10,20 @@ from cultivation.models import FarmCrop
 from farm.models import Farm
 
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
+    login_url = "login"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
+
         farms = Farm.objects.all()
+        farm_crops = FarmCrop.objects.select_related("farm__producer__user", "crop")
+
+        if not user.is_staff:
+            farms = farms.filter(producer__user=user)
+            farm_crops = farm_crops.filter(farm__producer__user=user)
 
         context["total_farms"] = farms.count()
 
@@ -33,12 +42,7 @@ class DashboardView(TemplateView):
             "data": [item["total"] for item in state_counts],
         }
 
-        crop_counts = (
-            FarmCrop.objects.select_related("crop")
-            .values("crop__name")
-            .annotate(total=Count("id"))
-            .order_by("crop__name")
-        )
+        crop_counts = farm_crops.values("crop__name").annotate(total=Count("id")).order_by("crop__name")
         context["crop_chart"] = {
             "labels": [item["crop__name"] for item in crop_counts],
             "data": [item["total"] for item in crop_counts],
