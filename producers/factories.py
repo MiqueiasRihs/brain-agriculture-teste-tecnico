@@ -1,9 +1,12 @@
-import random
+from django.contrib.auth import get_user_model
 
-import factory
 from factory.django import DjangoModelFactory
 
+from core.factories import UserFactory
 from producers.models import Producer
+
+import factory
+import random
 
 
 def _calculate_cpf_digit(digits):
@@ -36,5 +39,6 @@ class ProducerFactory(DjangoModelFactory):
         model = Producer
 
     name = factory.Faker("name")
+    user = factory.SubFactory(UserFactory)
     document_type = "CPF"
     document = factory.LazyFunction(_generate_unique_cpf)

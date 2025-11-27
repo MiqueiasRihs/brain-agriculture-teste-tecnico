@@ -9,3 +9,4 @@ class FarmAdmin(admin.ModelAdmin):
     search_fields = ('id', 'name', 'producer__name', 'producer__document')
     ordering = ('-updated_at',)
     readonly_fields = ('created_at', 'updated_at')
+    autocomplete_fields = ('producer',)

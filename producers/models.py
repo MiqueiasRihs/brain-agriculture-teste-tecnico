@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from core.models import BaseModel
@@ -11,6 +12,7 @@ class Producer(BaseModel):
     ]
     
     name = models.CharField("Nome", max_length=255)
+    user = models.OneToOneField(User, related_name='producer', on_delete=models.CASCADE, verbose_name=u'Usuário')
     document_type = models.CharField("Tipo de Documento", max_length=4, choices=DOCUMENT_TYPES)
     document = models.CharField("Documento", max_length=18, unique=True)
 
