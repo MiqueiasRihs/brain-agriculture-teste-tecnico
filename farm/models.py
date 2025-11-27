@@ -19,6 +19,7 @@ class Farm(BaseModel):
         db_table = "farms"
         verbose_name = "Fazenda"
         verbose_name_plural = "Fazendas"
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.name} ({self.state})"
