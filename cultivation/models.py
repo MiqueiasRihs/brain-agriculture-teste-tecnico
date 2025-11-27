@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from core.models import BaseModel
 from farm.models import Farm
@@ -33,6 +34,15 @@ class HarvestSeason(BaseModel):
     def __str__(self):
         return self.name
 
+    def clean(self):
+        if self.start_year and self.end_year and self.start_year > self.end_year:
+            raise ValidationError({"end_year": "O ano de término deve ser maior ou igual ao de início."})
+        return super().clean()
+    
+    def save(self, *args, **kwargs):
+        self.clean()
+        return super().save(*args, **kwargs)
+
 
 class FarmCrop(BaseModel):
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name="farm_crop")
@@ -41,8 +51,8 @@ class FarmCrop(BaseModel):
 
     class Meta:
         db_table = "farm_crop"
-        verbose_name = "Farm Crop"
-        verbose_name_plural = "Farm Crops"
+        verbose_name = "Cultivo Agrícola"
+        verbose_name_plural = "Cultivos Agrícolas"
         constraints = [
             models.UniqueConstraint(
                 fields=["farm", "harvest_season", "crop"],
