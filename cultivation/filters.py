@@ -20,6 +20,8 @@ class HarvestSeasonFilter(django_filters.FilterSet):
 
 
 class FarmCropFilter(django_filters.FilterSet):
+    producer = django_filters.UUIDFilter(field_name="farm__producer__id")
+    
     class Meta:
         model = FarmCrop
-        fields = ["farm", "harvest_season", "crop", "is_active"]
+        fields = ["farm", "farm__producer", "harvest_season", "crop", "is_active"]
