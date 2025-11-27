@@ -59,3 +59,15 @@ def test_producer_no_document_mask_creation():
     
     assert Producer.objects.count() == 1
     assert producer.document == "33680548000189"
+    
+    
+def test_delete_producer():
+    producer = Producer.objects.create(
+        name="Produtor teste",
+        document_type="CNPJ",
+        document="93997567000165"
+    )
+    
+    assert Producer.objects.count() == 1
+    producer.delete()
+    assert Producer.objects.count() == 0

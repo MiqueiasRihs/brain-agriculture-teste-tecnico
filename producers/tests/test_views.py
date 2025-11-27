@@ -82,6 +82,19 @@ def test_create_producer_with_valid_cpf(api_client, producer_list_url):
     assert response.data["document"] == "11144477735"
     assert response.data["is_active"] is True
     assert Producer.objects.filter(document="11144477735").exists()
+    
+    
+def test_delete_producer(api_client, producer_detail_url):
+    producer = Producer.objects.create(
+        name="Produtor Teste",
+        document_type="CPF",
+        document="60435059084",
+    )
+
+    response = api_client.delete(producer_detail_url(producer))
+
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+    assert not Producer.objects.filter(id=producer.id).exists()
 
 
 def test_create_producer_with_invalid_cpf(api_client, producer_list_url):

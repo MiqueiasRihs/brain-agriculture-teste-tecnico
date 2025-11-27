@@ -53,6 +53,7 @@ class FarmCrop(BaseModel):
         db_table = "farm_crop"
         verbose_name = "Cultivo Agrícola"
         verbose_name_plural = "Cultivos Agrícolas"
+        ordering = ['-created_at']
         constraints = [
             models.UniqueConstraint(
                 fields=["farm", "harvest_season", "crop"],
@@ -61,4 +62,4 @@ class FarmCrop(BaseModel):
         ]
 
     def __str__(self):
-        return f"{self.farm.name} - {self.crop.name} - {self.crop_season.name}"
+        return f"{self.farm.name} - {self.crop.name} - {self.harvest_season.name}"
