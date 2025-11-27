@@ -22,8 +22,11 @@ while [ $attempts -lt $max_attempts ]; do
         --username "$DJANGO_SUPERUSER_USERNAME" \
         --email "$DJANGO_SUPERUSER_EMAIL" || true
 
-        # echo "\n${GREEN}================ Iniciando os testes unitários... ================${NC}\n"
-        # pytest --no-migrations --disable-warnings -v
+        echo "\n${GREEN}================ Iniciando os testes unitários... ================${NC}\n"
+        pytest --no-migrations --disable-warnings -v
+
+        echo "\n${GREEN}================ Populando o banco... ================${NC}\n"
+        python3 manage.py populate_farmcrops 10
 
         echo "\n${GREEN}================ Iniciando o servidor Django... ================${NC}\n"
         python3 manage.py runserver 0.0.0.0:8000
