@@ -1,4 +1,5 @@
 from core.views import BaseViewSet
+from core.permissions import IsOwnerOrStaff
 
 from cultivation.models import Crop, HarvestSeason, FarmCrop
 from cultivation.serializers import (
@@ -28,3 +29,5 @@ class FarmCropViewSet(BaseViewSet):
     serializer_class = FarmCropSerializer
     filterset_class = FarmCropFilter
     ordering_fields = ["created_at"]
+    permission_classes = BaseViewSet.permission_classes + [IsOwnerOrStaff]
+    owner_lookup_field = "farm__producer__user"

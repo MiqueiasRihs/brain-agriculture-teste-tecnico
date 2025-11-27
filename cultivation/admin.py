@@ -21,7 +21,7 @@ class HarvestSeasonAdmin(admin.ModelAdmin):
 
 @admin.register(FarmCrop)
 class FarmCropAdmin(admin.ModelAdmin):
-    list_display = ("farm", "crop", "harvest_season", "is_active")
+    list_display = ("farm", "crop", "harvest_season", "farm")
     list_filter = ("harvest_season", "crop", "is_active")
-    search_fields = ("farm__name", "crop__name")
+    search_fields = ("farm__name", "crop__name", "farm__producer__user__username")
     ordering = ("-created_at",)

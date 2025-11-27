@@ -1,7 +1,11 @@
+import random
+
 from django.core.management.base import BaseCommand, CommandError
-from django.db import transaction
+from django.db import transaction, IntegrityError
 
 from cultivation.factories import FarmCropFactory
+from farm.factories import FarmFactory
+from producers.factories import ProducerFactory
 
 
 class Command(BaseCommand):
@@ -11,21 +15,44 @@ class Command(BaseCommand):
         parser.add_argument(
             "count",
             type=int,
-            help="Quantidade de registros FarmCrop que deseja gerar",
+            help="Quantidade de produtores e seus respectivos FarmCrops a serem gerados",
         )
 
     def handle(self, *args, **options):
-        count = options["count"]
-        if count < 1:
+        producer_count = options["count"]
+        if producer_count < 1:
             raise CommandError("O parâmetro count deve ser um inteiro positivo.")
 
-        self.stdout.write(self.style.NOTICE(f"Gerando {count} registros de FarmCrop..."))
+        self.stdout.write(
+            self.style.NOTICE(
+                f"Gerando {producer_count} produtores com quantidades variadas de FarmCrops..."
+            )
+        )
 
+        farmcrops_created = []
         with transaction.atomic():
-            farm_crops = [FarmCropFactory() for _ in range(count)]
+            for _ in range(producer_count):
+                producer = ProducerFactory()
+                farms = [
+                    FarmFactory(producer=producer)
+                    for _ in range(random.randint(1, 2))
+                ]
+
+                target = random.randint(1, max(2, len(farms) * 2))
+                produced = 0
+                attempts = 0
+
+                while produced < target and attempts < target * 5:
+                    farm = random.choice(farms)
+                    try:
+                        farmcrops_created.append(FarmCropFactory(farm=farm))
+                    except IntegrityError:
+                        attempts += 1
+                        continue
+                    produced += 1
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"{len(farm_crops)} registros de FarmCrop criados com sucesso."
+                f"{producer_count} produtores e {len(farmcrops_created)} FarmCrops criados com sucesso."
             )
         )
