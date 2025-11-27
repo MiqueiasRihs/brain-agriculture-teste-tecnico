@@ -1,3 +1,5 @@
+import random
+
 import factory
 from factory.django import DjangoModelFactory
 
@@ -11,6 +13,14 @@ class CropFactory(DjangoModelFactory):
 
     name = factory.Sequence(lambda n: f"Cultura {n}")
     code = factory.Sequence(lambda n: f"CROP-{n:04d}")
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        count = model_class.objects.count()
+        if count:
+            index = random.randint(0, count - 1)
+            return model_class.objects.all()[index]
+        return super()._create(model_class, *args, **kwargs)
 
 
 class HarvestSeasonFactory(DjangoModelFactory):
