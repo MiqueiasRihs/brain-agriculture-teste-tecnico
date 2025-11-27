@@ -24,7 +24,7 @@ class Command(BaseCommand):
             raise CommandError("O parâmetro count deve ser um inteiro positivo.")
 
         self.stdout.write(
-            self.style.NOTICE(
+            self.style.WARNING(
                 f"Gerando {producer_count} produtores com quantidades variadas de FarmCrops..."
             )
         )

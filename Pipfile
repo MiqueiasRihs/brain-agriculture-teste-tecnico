@@ -18,8 +18,6 @@ dj-static = "*"
 django-extensions = "*"
 django-test-without-migrations = "*"
 pillow = "*"
-celery = "*"
-redis = "*"
 djangorestframework-simplejwt = "*"
 
 [dev-packages]

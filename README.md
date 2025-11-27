@@ -1,6 +1,6 @@
 # Brain Agriculture – Teste Técnico (Back-end)
 
-Aplicação Django/DRF para gestão de produtores rurais, propriedades, safras e culturas. O projeto foi construído para atender aos requisitos do teste técnico da Brain Agriculture e prioriza boas práticas (arquitetura em camadas, validações de domínio, testes automatizados e observabilidade por meio de logs e métricas derivadas).
+Aplicação Django/DRF para gestão de produtores rurais, propriedades, safras e culturas. O projeto foi construído para atender aos requisitos do teste técnico e prioriza boas práticas (arquitetura em camadas, validações de domínio, testes automatizados e observabilidade por meio de logs e métricas derivadas).
 
 ## Sumário
 
@@ -48,8 +48,6 @@ Fluxos implementados:
 - **Dashboard Web** – Accessível via `/` (Django Template + Chart.js) após login tradicional.
 - **Documentação automática** – `/api/schema/` (OpenAPI JSON) e `/api/docs/` (Swagger UI) via drf-spectacular.
 
-Usuário padrão (Docker): `admin / admin` (definido em `docker-compose.yml`).
-
 ## Execução com Docker
 
 ```bash
@@ -59,6 +57,28 @@ docker-compose up --build
 ```
 
 O backend ficará disponível em `http://localhost:8000`.
+
+> **Usuário padrão (admin)**: assim que o container sobe, o script `setup_dev.sh` cria automaticamente o superusuário `admin` (senha `admin`). Utilize essas credenciais para acessar o admin, gerar tokens JWT ou acessar o dashboard sem precisar criar contas manualmente.
+
+> **Usuários produtores**: ao popular o banco, também são criados usuários de produtores com um padrão previsível. Você pode, por exemplo, autenticar com `producer_user_1` (senha `123456`) para enxergar apenas os dados dele e validar as regras de permissão.
+
+> Após autenticar (como `admin/admin` ou `producer_user_1/123456`), acesse `http://localhost:8000` no navegador: essa rota serve o dashboard, contendo os gráficos de total de fazendas, distribuição por estado, culturas e uso do solo. Tudo já virá preenchido com os dados populados automaticamente.
+
+### Dados iniciais
+
+Na mesma execução do `setup_dev.sh` é disparado o comando de seed `python manage.py populate_farmcrops 10`, responsável por gerar produtores, fazendas, safras e culturas de exemplo. Assim, o avaliador já encontra o dashboard preenchido e os endpoints retornando resultados logo após o `docker-compose up --build` finalizar.
+
+Caso queira rodar novamente (seja no Docker ou localmente), execute:
+
+```bash
+docker-compose exec django python manage.py populate_farmcrops 10
+```
+
+Ou, fora do Docker:
+
+```bash
+python manage.py populate_farmcrops 10
+```
 
 ## Variáveis de Ambiente
 
@@ -78,7 +98,7 @@ DJANGO_SETTINGS_MODULE=brain_agriculture.settings pytest --disable-warnings -v
 make test
 ```
 
-Há testes de modelos, serializers, views e do fluxo de signup (`core/tests/test_signup.py`). Fábricas em `core/factories.py`, `producers/factories.py`, etc. auxiliam na criação de dados.
+Há testes de modelos, serializers, views e do fluxo de signup (`core/tests/test_signup.py`). Factories em `core/factories.py`, `producers/factories.py`, etc. auxiliam na criação de dados.
 
 ## Autenticação e Observabilidade
 
@@ -86,10 +106,10 @@ Há testes de modelos, serializers, views e do fluxo de signup (`core/tests/test
 - **Logs** – Configuração em `brain_agriculture/settings.py` + instrumentação em `core/views.py` e `brain_agriculture/views.py`. Cada criação/atualização/exclusão gera um log no formato `[timestamp] INFO brain_agriculture.api ...` facilitando monitoramento.
 - **Permissões** – `IsOwnerOrStaff` garante que usuários comuns só acessem seus recursos. Staff tem visão global.
 
-## documentação
+## Documentação
 
-- **OpenAPI JSON**: `GET /api/schema/`
-- **Swagger UI**: `GET /api/docs/`
+- **Swagger UI (recomendada)**: `GET /api/docs/` — interface interativa onde você pode visualizar e testar todos os endpoints (autenticação, produtores, fazendas, culturas, safra e farm-crops). Basta abrir no navegador e usar o botão *Authorize* para informar o token JWT.
+- **OpenAPI JSON**: `GET /api/schema/` — especificação em formato JSON/YAML caso prefira importar em ferramentas externas.
 
 
 ## Principais Endpoints
@@ -107,7 +127,3 @@ Há testes de modelos, serializers, views e do fluxo de signup (`core/tests/test
 | Dashboard | GET | `/` + `/login` | Dashboard HTML + autenticação clássica. |
 
 Além das operações básicas, todos os recursos oferecem filtros (`django-filter`) e ordenação (`ordering` query param). Consulte o Swagger para parâmetros detalhados.
-
----
-
-Qualquer dúvida ou sugestão, fique à vontade para entrar em contato!
