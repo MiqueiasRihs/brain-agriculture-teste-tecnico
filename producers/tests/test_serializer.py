@@ -27,6 +27,21 @@ def test_serializer_invalid_cpf():
     assert serializer.is_valid() is False
     assert "document" in serializer.errors
     
+def test_serializer_duplicate_cpf():
+    data = {
+        "name": "João da Silva",
+        "document_type": "CPF",
+        "document": "11144477735",
+    }
+
+    serializer = ProducerSerializer(data=data)
+    assert serializer.is_valid() is True
+    serializer.save()
+
+    duplicate_serializer = ProducerSerializer(data=data)
+    assert duplicate_serializer.is_valid() is False
+    assert "document" in duplicate_serializer.errors
+    
     
 def test_serializer_valid_cnpj():
     data = {

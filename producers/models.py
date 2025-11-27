@@ -32,10 +32,12 @@ class Producer(BaseModel):
         if not document_validator.validate(document):
             raise ValidationError({ "document": f"{document_type} inválido, por favor verifique se esta correto." })
 
+        if not self.pk and Producer.objects.filter(document=document).exists():
+            raise ValidationError({ "document": "Já existe um produtor cadastrado com este documento." })
+
     def save(self, *args, **kwargs):
         self.clean()
         
-        # Salvando apenas números do documento
         self.document = ''.join(filter(str.isdigit, self.document))
         return super().save(*args, **kwargs)
     

@@ -1,10 +1,17 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from producers.models import Producer
 from core.validators.document_validator import DocumentValidatorFactory
 
 
 class ProducerSerializer(serializers.ModelSerializer):
+    document = serializers.CharField(validators=[
+        UniqueValidator(
+            queryset=Producer.objects.all(),
+            message="Já existe um produtor cadastrado com este documento."
+        )
+    ])
     
     class Meta:
         model = Producer

@@ -20,7 +20,7 @@ class Crop(BaseModel):
 
 
 class HarvestSeason(BaseModel):
-    name = models.CharField("Nome", max_length=50, unique=True)
+    name = models.CharField("Nome", max_length=50)
 
     start_year = models.PositiveIntegerField("Ano de início da safra", null=True, blank=True)
     end_year = models.PositiveIntegerField("Ano de término da safra", null=True, blank=True)

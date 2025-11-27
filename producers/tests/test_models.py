@@ -17,6 +17,21 @@ def test_producer_valid_cpf_creation():
     assert producer.name == "Produtor teste"
     assert Producer.objects.count() == 1
 
+def test_producer_duplicate_cpf_creation():
+    Producer.objects.create(
+        name="Produtor teste",
+        document_type="CPF",
+        document="60435059084"
+    )
+    
+    with pytest.raises(ValidationError):
+        producer = Producer(
+            name="Produtor teste 2",
+            document_type="CPF",
+            document="60435059084"
+        )
+        producer.full_clean()
+
 
 def test_producer_invalid_cpf_creation():
     producer = Producer(
