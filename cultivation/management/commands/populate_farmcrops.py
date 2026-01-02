@@ -3,6 +3,7 @@ import random
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction, IntegrityError
 
+from core.factories import UserFactory
 from cultivation.factories import FarmCropFactory
 from farm.factories import FarmFactory
 from producers.factories import ProducerFactory
@@ -31,8 +32,9 @@ class Command(BaseCommand):
 
         farmcrops_created = []
         with transaction.atomic():
-            for _ in range(producer_count):
-                producer = ProducerFactory()
+            for i in range(producer_count):
+                user = UserFactory(username=f"producer_user_{i}")
+                producer = ProducerFactory(user=user)
                 farms = [
                     FarmFactory(producer=producer)
                     for _ in range(random.randint(1, 2))

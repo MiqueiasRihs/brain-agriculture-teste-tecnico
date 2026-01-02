@@ -37,6 +37,7 @@ def _generate_unique_cpf():
 class ProducerFactory(DjangoModelFactory):
     class Meta:
         model = Producer
+        django_get_or_create = ('user',)
 
     name = factory.Faker("name")
     user = factory.SubFactory(UserFactory)
